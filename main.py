@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Request
-from service import create_record_in_db
+from service import create_record_in_db, update_record_in_db, delete_record_in_db
 from models import Customer, CustomerDB
 from config import STRIPE_CONFIG
 import stripe
@@ -25,6 +25,13 @@ async def handle_stripe_webhook(request: Request):
         stripe_customer = event.data.object
         db_customer = create_record_in_db(CustomerDB, stripe_customer, Customer)
         return {"message": f"Customer created: {db_customer.id}"}
+    elif event.type == 'customer.updated':
+        stripe_customer = event.data.object
+        db_customer = update_record_in_db(CustomerDB, stripe_customer['id'], Customer, stripe_customer)
+        return {"message": f"Customer updated: {db_customer.id}"}
+    elif event.type == 'customer.deleted':
+        stripe_customer = event.data.object
+        db_customer = delete_record_in_db(CustomerDB, stripe_customer['id'])
     
     return {"message": "Unhandled event type"}
 
