@@ -8,5 +8,17 @@ DB_CONNECTION_PARAMS = {
     "password": "mypass",
     "host": "localhost",
     "port": "5432",
-    "database": "customercatalog" #change it
+    "database": "customercatalog"
+}
+
+PRODUCER_CONFIG = {
+    'bootstrap.servers': 'localhost:9092',
+    'client.id': 'twowayintegration',
+    'acks': 'all'
+}
+
+CONSUMER_CONFIG = {
+    'bootstrap.servers': 'localhost:9092',
+    'group.id': 'stripe_customer',
+    'auto.offset.reset': 'earliest'
 }
