@@ -1,0 +1,5 @@
+fastapi
+stripe
+confluent_kafka
+sqlalchemy
+pydantic
