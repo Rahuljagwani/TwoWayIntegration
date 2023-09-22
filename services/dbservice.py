@@ -1,5 +1,5 @@
 from sqlalchemy import inspect
-from psql import SessionLocal, engine
+from TwoWayIntegration.database.psql import SessionLocal, engine
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from fastapi import HTTPException
 

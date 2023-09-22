@@ -1,6 +1,6 @@
 from confluent_kafka import Consumer, KafkaError
 from config import CONSUMER_CONFIG
-from stripeService import delete_stripe_customer, create_stripe_customer, update_stripe_customer
+from TwoWayIntegration.services.stripeService import delete_stripe_customer, create_stripe_customer, update_stripe_customer
 import json
 
 consumer = Consumer(CONSUMER_CONFIG)

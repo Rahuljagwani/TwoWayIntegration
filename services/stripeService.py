@@ -1,6 +1,6 @@
 import stripe
 from config import STRIPE_CONFIG
-from dbservice import create_record_in_db, update_record_in_db, delete_record_in_db
+from TwoWayIntegration.services.dbservice import create_record_in_db, update_record_in_db, delete_record_in_db
 from models import Customer, CustomerDB
 
 stripe.api_key = STRIPE_CONFIG['api_key']
