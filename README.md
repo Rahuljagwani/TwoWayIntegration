@@ -79,6 +79,10 @@ It is necessary that you install Kafka from my docker-compose file otherwise err
    pip3 install -r requirements
    python3 main.py
    ```
+    - Open new terminal and execute in main directory
+	```
+	python3 customer.py
+	```
 - ### Inward Synchronization demo
 	- Visit the Customers tab in your Stripe Dashboard
 	- Perform creation, deletion and updation there, same changes will be reflected into your local psql database.
