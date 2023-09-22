@@ -1,5 +1,5 @@
 from confluent_kafka import Producer, KafkaError
-from config import PRODUCER_CONFIG
+from settings.config import PRODUCER_CONFIG
 import json
 
 producer = Producer(PRODUCER_CONFIG)

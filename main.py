@@ -1,8 +1,8 @@
-from fastapi import FastAPI, HTTPException, Request
-from TwoWayIntegration.services.dbservice import create_record_in_db, update_record_in_db, delete_record_in_db
-from models import Customer, CustomerDB
-from TwoWayIntegration.Kafka.producer import publish_to_kafka
-from config import STRIPE_CONFIG
+from fastapi import FastAPI, Request
+from services.dbservice import create_record_in_db, update_record_in_db, delete_record_in_db
+from model.models import Customer, CustomerDB
+from Kafka.producer import publish_to_kafka
+from settings.config import STRIPE_CONFIG
 import stripe
 import json
 

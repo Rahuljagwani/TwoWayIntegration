@@ -1,12 +1,12 @@
 from confluent_kafka import Consumer, KafkaError
-from config import CONSUMER_CONFIG
-from TwoWayIntegration.services.stripeService import delete_stripe_customer, create_stripe_customer, update_stripe_customer
 import json
+from services.stripeService import delete_stripe_customer, create_stripe_customer, update_stripe_customer
+from settings.config import CONSUMER_CONFIG
 
 consumer = Consumer(CONSUMER_CONFIG)
 events = ['stripe_customer']
 consumer.subscribe(events)
-        
+
 while True:
     msg = consumer.poll(1.0)
 
@@ -26,8 +26,6 @@ while True:
             event = event_data['event']
             del event_data['topic']
             del event_data['event']
-        print(event_data)
-        print(id)
         if event_data == None:
             delete_stripe_customer(id)
         elif event == 'update':
@@ -35,3 +33,4 @@ while True:
         elif event == 'create':
             create_stripe_customer(event_data)
         
+

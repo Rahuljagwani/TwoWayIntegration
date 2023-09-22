@@ -1,7 +1,7 @@
 import stripe
-from config import STRIPE_CONFIG
-from TwoWayIntegration.services.dbservice import create_record_in_db, update_record_in_db, delete_record_in_db
-from models import Customer, CustomerDB
+from settings.config import STRIPE_CONFIG
+from services.dbservice import create_record_in_db, update_record_in_db, delete_record_in_db
+from model.models import Customer, CustomerDB
 
 stripe.api_key = STRIPE_CONFIG['api_key']
 
@@ -22,7 +22,6 @@ def update_stripe_customer(customer_id, changes):
 def create_stripe_customer(customer_data):
     try:
         stripe_customer = stripe.Customer.create( name=customer_data['name'], email=customer_data['email'])
-        print(stripe_customer)
         db_customer = create_record_in_db(CustomerDB, stripe_customer, Customer)
         return f"Created Stripe customer {db_customer.id}"
     except stripe.error.StripeError as e:

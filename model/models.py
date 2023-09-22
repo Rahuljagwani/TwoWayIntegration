@@ -1,14 +1,14 @@
 from pydantic import BaseModel
+from sqlalchemy import Column, Text
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 class Customer(BaseModel):
     id: str
     name: str
     email: str
 
-from sqlalchemy import Column, Text
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
 
 class CustomerDB(Base):
     __tablename__ = "customers"
