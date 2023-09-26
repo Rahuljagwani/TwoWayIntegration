@@ -1,8 +1,9 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from services.dbservice import create_record_in_db, update_record_in_db, delete_record_in_db
 from model.models import Customer, CustomerDB
 from Kafka.producer import publish_to_kafka
 from settings.config import STRIPE_CONFIG
+from database.psql import SessionLocal
 import stripe
 import json
 
@@ -24,16 +25,36 @@ async def handle_stripe_webhook(request: Request):
 
     if event.type == 'customer.created':
         stripe_customer = event.data.object
-        db_customer = create_record_in_db(CustomerDB, stripe_customer, Customer)
-        return {"message": f"Customer created: {db_customer.id}"}
+        stripe_customer['stripe_id'] = stripe_customer['id']
+        stripe_customer['id'] = stripe_customer['id'].split("_")[1]
+        create_record_in_db(CustomerDB, stripe_customer, Customer)
+        print(f"{stripe_customer['name']} successfully created")
+        
     elif event.type == 'customer.updated':
         stripe_customer = event.data.object
-        db_customer = update_record_in_db(CustomerDB, stripe_customer['id'], Customer, stripe_customer)
-        return {"message": f"Customer updated: {db_customer.id}"}
+        db = SessionLocal()
+        existing_record = db.query(CustomerDB).filter(CustomerDB.stripe_id == stripe_customer['id']).first()
+        db.close()
+        if existing_record:
+            stripe_customer['stripe_id'] = stripe_customer['id']
+            stripe_customer['id'] = existing_record.id
+            update_record_in_db(CustomerDB, stripe_customer['id'], Customer, stripe_customer)
+            print(f"{stripe_customer['name']} successfully updated")
+        else:
+            raise HTTPException(status_code=404, detail=f"{CustomerDB.__name__} not found")
+
     elif event.type == 'customer.deleted':
         stripe_customer = event.data.object
-        db_customer = delete_record_in_db(CustomerDB, stripe_customer['id'])
-    return {"message": "Unhandled event type"}
+        db = SessionLocal()
+        existing_record = db.query(CustomerDB).filter(CustomerDB.stripe_id == stripe_customer['id']).first()
+        db.close()
+        if existing_record:
+            stripe_customer['stripe_id'] = stripe_customer['id']
+            stripe_customer['id'] = existing_record.id
+            delete_record_in_db(CustomerDB, stripe_customer['id'])
+            print(f"{stripe_customer['name']} successfully deleted")
+        else:
+            raise HTTPException(status_code=404, detail=f"{CustomerDB.__name__} not found")
 
 @app.post("/customers")
 async def create_customer(request: Request):
