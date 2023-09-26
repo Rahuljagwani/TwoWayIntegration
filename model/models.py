@@ -8,6 +8,7 @@ class Customer(BaseModel):
     id: str
     name: str
     email: str
+    stripe_id: str
 
 
 class CustomerDB(Base):
@@ -16,3 +17,4 @@ class CustomerDB(Base):
     id = Column(Text, primary_key=True)
     name = Column(Text)
     email = Column(Text)
+    stripe_id = Column(Text, nullable=True)

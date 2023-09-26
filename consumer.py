@@ -9,7 +9,6 @@ consumer.subscribe(events)
 
 while True:
     msg = consumer.poll(1.0)
-
     if msg is None:
         continue
     if msg.error():
@@ -31,6 +30,6 @@ while True:
         elif event == 'update':
             update_stripe_customer(id, event_data)
         elif event == 'create':
-            create_stripe_customer(event_data)
+            create_stripe_customer(id, event_data)
         
 

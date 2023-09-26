@@ -11,7 +11,7 @@ def publish_to_kafka(id, message, topic, event):
         message_value = json.dumps(message)
         producer.produce(topic, key=str(id), value=message_value)
         producer.flush()
-        return {"Message added successfully,id":id}
+        return f"Successfull {event}d"
     except KafkaError as e:
         print(f"Kafka error: {e}")
     except Exception as e:

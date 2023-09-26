@@ -61,7 +61,7 @@ def delete_record_in_db(db_model, record_id):
             db.delete(existing_record)
             db.commit()
             db.close()
-            return {"message": f"{db_model.__name__} with id {record_id} deleted"}
+            return existing_record
         else:
             db.close()
             raise HTTPException(status_code=404, detail=f"{db_model.__name__} not found")

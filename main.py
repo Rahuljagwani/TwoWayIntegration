@@ -35,26 +35,31 @@ async def handle_stripe_webhook(request: Request):
         db_customer = delete_record_in_db(CustomerDB, stripe_customer['id'])
     return {"message": "Unhandled event type"}
 
-@app.post("/stripe/customers")
+@app.post("/customers")
 async def create_customer(request: Request):
     payload = await request.body()
     payload_str = payload.decode('utf-8')
     stripe_customer = json.loads(payload_str)
+    stripe_customer['stripe_id'] = "demo_id"
+    create_record_in_db(CustomerDB, stripe_customer, Customer)
     message = publish_to_kafka(stripe_customer['id'], stripe_customer, 'stripe_customer', 'create')
     return {"message": message}
 
 
-@app.patch("/stripe/customers/{customer_id}")
+@app.patch("/customers/{customer_id}")
 async def update_customer(customer_id: str, request: Request):
     payload = await request.body()
     payload_str = payload.decode('utf-8')
     stripe_customer = json.loads(payload_str)
-    message = publish_to_kafka(customer_id, stripe_customer, 'stripe_customer', 'update')
+    record = update_record_in_db(CustomerDB, customer_id, Customer, stripe_customer)
+    message = publish_to_kafka(record.stripe_id, stripe_customer, 'stripe_customer', 'update')
     return {"message": message}
 
-@app.delete("/stripe/customers/{customer_id}")
+@app.delete("/customers/{customer_id}")
 def delete_customer(customer_id: str):
-    publish_to_kafka(customer_id, None, 'stripe_customer', 'delete')
+    record = delete_record_in_db(CustomerDB, customer_id)
+    message = publish_to_kafka(record.stripe_id, None, 'stripe_customer', 'delete')
+    return {"message": message}
 
 if __name__ == "__main__":
     import uvicorn
