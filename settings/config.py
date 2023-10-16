@@ -1,11 +1,11 @@
 STRIPE_CONFIG = {
-    "api_key": "sk_test_51NsWcnSETM5tPN1HpjVIsBMFGk9dSNmf9qtpBnP81OUxpzbHRK9RCe90X9DOmr8h4TZZDsQcZS9V3hxNKz8wkA6p00oHc8VfUI",
-    "webhook_secret": "whsec_Zi7QLRkrbyu5QBw1K03bVHVHjDkk8b9v",
+    "api_key": "YOUR_API_KEY",
+    "webhook_secret": "YOUR_WEBHOOK_SECRET",
 }
 
 DB_CONNECTION_PARAMS = {
     "user": "rahul",
-    "password": "mypass",
+    "password": "YOUR_PASS",
     "host": "localhost",
     "port": "5432",
     "database": "customercatalog"
